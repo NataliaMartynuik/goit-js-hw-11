@@ -1,5 +1,7 @@
 import ImagesApiServise from './fetchImages'
-
+import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 
 
@@ -8,35 +10,71 @@ const refs = {
     searchForm: document.querySelector('#search-form'),
     imagesContainer: document.querySelector('.gallery'),
     loadMoreBtn: document.querySelector('.load-more')
+    
 }
-
+const perPage = 40;
+const gallery = new SimpleLightbox(".gallery a");
+refs.loadMoreBtn.hidden = true;
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore)
+refs.loadMoreBtn.addEventListener('click', onLoadMore);
+
+
 
 function onSearch(evt) {
     evt.preventDefault();
     imagesApiServise.query = evt.currentTarget.elements.searchQuery.value
-    imagesApiServise.resetPage()
-    imagesApiServise.fetchImages().then(hits => {
+   
+    if (imagesApiServise.query === '') {
         clearImageContainer()
-        createImageCard(hits)
-    })
+        noticeNoEmptySearch()
+        refs.loadMoreBtn.hidden = true;
+       
+        return;
+    }
+    imagesApiServise.resetPage()
+    imagesApiServise.fetchImages().then(data => {
+        if (data.totalHits === 0) {
+            noticeNoImagesFound()
+            refs.loadMoreBtn.hidden = true;
+        } else {
+           clearImageContainer()
+           createImageCard(data.hits)
+           gallery.refresh(); 
+           noticeImagesFound(data)
+            refs.loadMoreBtn.hidden = true;
+        if (data.totalHits >= perPage) {
+            refs.loadMoreBtn.hidden = false
+        }
+        }
+      })
+    .catch(error => console.log(error))
     
+   
 }
 
 function onLoadMore() {
-    imagesApiServise.fetchImages().then(createImageCard)
-    
-    
+        imagesApiServise.fetchImages().then(data => {
+        createImageCard(data.hits)
+        gallery.refresh(); 
+        const totalPage = Math.ceil(data.totalHits / perPage)
+        const currentPage = imagesApiServise.page - 1
+        if (totalPage <  currentPage) {
+            noticeEndSearch()
+            refs.loadMoreBtn.hidden = true;
+         }
+    })
+       .catch(error => console.log(error))
+  
 }
-
 
  function createImageCard(hits) {
         
     const markup = hits
-    .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
+    .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
       return `
-            <div class="photo-card">
+           
+                <div class="photo-card">
+                <a href="${largeImageURL}">
                 <img src="${webformatURL}" alt="${tags}" loading="lazy" />
                 <div class="info">
                     <p class="info-item">
@@ -51,7 +89,7 @@ function onLoadMore() {
                     <p class="info-item">
                     <b>Downloads ${downloads}</b>
                     </p>
-                </div>
+                </div></a>
         </div>
         `
     })
@@ -63,6 +101,21 @@ function clearImageContainer() {
     refs.imagesContainer.innerHTML = ''
 }
 
+function noticeNoEmptySearch() {
+     Notiflix.Notify.failure('The search string cannot be empty. Please specify your search query.')
+}
+
+function noticeImagesFound(data) {
+    Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+}
+
+function noticeEndSearch() {
+    Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+}
+
+function noticeNoImagesFound() {
+    Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+}
 
 
 

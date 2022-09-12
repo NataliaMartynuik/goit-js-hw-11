@@ -8,32 +8,98 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
-  color: #212121;
   line-height: 1.5;
 }
-
-#search-box {
-  font: inherit;
-  padding: 8px;
-  max-width: 320px;
-  margin-bottom: 16px;
+a {
+  text-decoration: none;
+  color: #305149;
 }
 
-.country-list {
-  padding: 0;
+img {
+  display: block;
+  width: 100%;
+  height: 208px;
+}
+.container {
+  width: 1200px;
+  margin: 0 auto; 
 }
 
-.country-list__item {
-  list-style: none;
+.form {
+  position: fixed;
+  width: 1200px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #4c736a;
+  text-align: center;
+
+}
+input {
+  width: 400px;
+  height: 30px;
+  outline: none;
+  border: 1px solid rgba(33, 33, 33, 0.2);
+  border-radius: 4px;
+  padding-left: 22px;
+  margin-top: 4px;
+  transition: border 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+button {
+  
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.88;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.06em;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 4px;
+  color: #4c736a;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 80px;
+  margin-left: -20px;
+  margin-top: -20px;
+} 
+
+.photo-card {
+  margin-left: 20px;
+  margin-top: 20px;
+  flex-basis: calc((100% - 80px) / 4);
+  border: 1px solid #a9beba;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  
+}
+
+.info {
   display: flex;
   align-items: center;
+  text-align: center;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.14;
+  letter-spacing: 0.02em;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
-.country-list__name {
-  margin: 2px 10px;
-}
+.load-more-btn {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
 
-.country-info__list {
-  list-style: none;
-  padding: 0;
-}
+ }
+
+
+ .load-more {
+  background-color: #4c736a;
+  color: #a9beba;
+ }
